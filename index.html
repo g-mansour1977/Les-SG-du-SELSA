@@ -1,44 +1,132 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Recherche par Section</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    input, button { padding: 10px; font-size: 16px; }
-    #result { margin-top: 20px; font-weight: bold; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recherche par Section</title>
+
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #eef2ff, #ffffff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  .container {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    width: 350px;
+    text-align: center;
+  }
+
+  /* 🔥 LOGO */
+  .logo {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+
+  h2 {
+    margin-bottom: 15px;
+  }
+
+  .info {
+    background: #fff3cd;
+    padding: 10px;
+    border-left: 5px solid #ffc107;
+    font-size: 14px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    background: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    background: #4338ca;
+  }
+
+  .result {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    background: #f1f5f9;
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .error {
+    color: red;
+  }
+</style>
 </head>
+
 <body>
-  <div style="background-color: #fff3cd; padding: 15px; border-left: 5px solid #ffeeba; margin-bottom: 20px;">
-    ⚠️ 
-    Cette page permet de rechercher facilement les contacts par SECTION (localité).<br>
-     (ex. : <strong>THIAROYE</strong>, <strong>DAKAR</strong>, <strong>KOLDA</strong>).<br>
-    
+
+<div class="container">
+
+  <!-- 🔥 LOGO ICI -->
+  <img src="logo SELS A.png" alt="Logo SELS/A" class="logo">
+
+  <div class="info">
+    ⚠️ Recherchez un contact par SECTION (ex: THIAROYE, DAKAR, KOLDA)
   </div>
 
+  <h2>🔍 Recherche</h2>
 
-  <h2>🔍 Rechercher un contact par SECTION</h2>
+  <input type="text" id="section" placeholder="Tapez une section..." oninput="autoSearch()">
 
-  <label for="section">SECTION :</label>
-  <input type="text" id="section" placeholder="Ex: THIAROYE">
   <button onclick="rechercher()">Rechercher</button>
 
-  <div id="result"></div>
+  <div id="result" class="result"></div>
 
-  <script>
-    const contacts = {
-      "SARAYA": ["Fily Soumare", "+221 77 107 40 77"],
-      "KOLDA": ["Gerard Mendy", "777758558"],
+</div>
+
+<script>
+const contacts = {
+"SARAYA": ["Fily Soumare", "+221 77 107 40 77"],
+      "KOLDA": ["Gerard Sambou", "77 773 83 58"],
       "VELINGARA": ["Daffe", "+221 77 632 43 73"],
       "MYF": ["Khadim diaoune", "+221 78 376 66 13"],
       "GOUDIRY": ["Bouyagui Cissé", "+221 77 223 01 90"],
       "SALEMATA": ["Ousmane Diallo", "+221 77 185 06 49"],
       "KEDOUGOU": ["Cheikh T Diallo", "+221 78 607 21 89"],
       "GUINGUINEO": ["Djiby Ndiaye", "+221 77 351 30 56"],
-      "BIGNONA": ["Charle mendy", "+221 77 555 16 29"],
-      "OUSSOUYE": ["Ousseynou Diallo", "+221 77 563 38 50"],
-      "ZIGUINCHOR": ["Badou mane", "+221 77 614 64 63"],
+      "BIGNONA": ["Charles Mendy", "+221 77 555 16 29"],
+      "OUSSOUYE": ["Seydou Diallo", "+221 77 563 38 50"],
+      "ZIGUINCHOR": ["Badou Mane", "+221 77 614 64 63"],
       "MBACKE": ["Alassane Sow", "763757660"],
       "SEDHIOU": ["Ousmane Sylla", "771468103"],
       "BAMBEY": ["Fallou Ndiaye", "+221 77 231 75 52"],
@@ -55,40 +143,57 @@
       "THIAROYE": ["Mansour Gueye", "+221 77 681 37 49"],
       "KEUR MASSAR": ["Sonhaibou Sané", "+221 78 243 86 83"],
       "RUFISQUE": ["Mouhamadou F Mboup", "+221 77 559 79 52"],
-      "KAOLACK": ["Babacar Kebe", "+221 77 574 61 13"],
-      "NIORO": ["Khoradia TOP", "+221 77 523 15 10"],
+      "KAOLACK": ["Babacar Kebe", "+221 77 505 31 25"],
+      "NIORO DU RIP": ["Khorédia TOP", "+221 77 523 15 10"],
       "LOUGA": ["Bassirou Diop", "+221 77 574 61 13"],
-      "DAHRA": ["?", "+221 77 406 22 53"],
+      "DAHRA DJOLOF": ["Moussa Ndiaye", "+221 77 691 33 25"],
       "LINGUERE": ["Mamadou Kobar", "775136286"],
       "SAINT LOUIS": ["?", "771608236"],
-      "PODOR": ["Abdoulaye Ly", "+221 77 140 59 03"],
+      "PODOR": ["Mamadou Ly", "+221 77 140 59 03"],
       "DAGANA": ["Abdou A Ba", "+221 77 534 92 37"],
-      "MATAM": ["Aminata Guissé", "+221 77 549 44 99"],
+      "MATAM": ["Aminata Guissé", "+221 77 223 06 39"],
       "KANEL": ["Dahirou Ba", "777693567"],
       "RANEROU": ["Mahfouz Diedhiou", "+221 77 447 87 83"],
       "TAMBA": ["Moustapha Danfakha", "+221 77 635 06 78"],
       "KOUMPENTOUM": ["Aliou Traoré", "+221 77 935 26 17"],
       "BAKEL": ["Hamidou Sidibé", "+221 77 506 00 22"],
-      "KAFFRINE": ["El Hadj Malick DIOP", "779011692"],
+      "KAFFRINE": ["El Hadj Malick Diop", "779011692"],
       "PETE": ["Ibrahima Badji", "+221 77 133 38 14"],
       "GOUDOMP": ["Ibrahima Diallo", "+221 77 521 52 34"],
       "BOUNKILING": ["Ndiaga Niang", "+221 77 631 91 66"],
-      "KOUNGUEUL": ["Ousseynou Wade", "+221 77 512 89 18"],
-      "BIRKILANE": ["Boubacar Ka", "776167066"]
-    };
+      "KOUNGUEUL": ["Papa Mor Talla", "+221 77 447 23 04"],
+      "BIRKILANE": ["Boubacar Ka", "77 616 70 66"],
+      "GUINGUINEO": ["Djibril Diop", "77 351 30 56"]
+};
 
-    function rechercher() {
-      const section = document.getElementById("section").value.trim().toUpperCase();
-      const info = contacts[section];
-      const resultDiv = document.getElementById("result");
+function afficherResult(info, section) {
+  const resultDiv = document.getElementById("result");
+  resultDiv.style.display = "block";
 
-      if (info) {
-        resultDiv.innerHTML = `👤 <strong>${info[0]}</strong><br>📞 <strong>${info[1]}</strong>`;
-      } else {
-        resultDiv.innerHTML = `❌ Section <strong>${section}</strong> introuvable.`;
-      }
-    }
-  </script>
+  if (info) {
+    resultDiv.innerHTML = `👤 <strong>${info[0]}</strong><br>📞 <strong>${info[1]}</strong>`;
+    resultDiv.classList.remove("error");
+  } else {
+    resultDiv.innerHTML = `❌ Section <strong>${section}</strong> introuvable.`;
+    resultDiv.classList.add("error");
+  }
+}
+
+function rechercher() {
+  const section = document.getElementById("section").value.trim().toUpperCase();
+  afficherResult(contacts[section], section);
+}
+
+function autoSearch() {
+  const section = document.getElementById("section").value.trim().toUpperCase();
+
+  if (section.length >= 3) {
+    afficherResult(contacts[section], section);
+  } else {
+    document.getElementById("result").style.display = "none";
+  }
+}
+</script>
 
 </body>
 </html>
